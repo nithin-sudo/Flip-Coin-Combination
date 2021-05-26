@@ -1,22 +1,23 @@
-#!/bin/bash -x
-echo "Flip Coin Combination Problem"
-ran=$((RANDOM%2))
+#!/bin/bash
 echo "Flip Coin Combination Problem"
 declare -A dict
 read -p "Enter the number to flip coin: " nmb
-
+function coin()
+{
+case $1 in
+        11) echo "HH" ;;
+        10) echo "HT" ;;
+        01) echo "TH" ;;
+        00) echo "TT" ;;
+esac
+}
 for ((i=1; i<=$nmb; i++))
 do
-        ran=$((RANDOM%2))
-        if [ $ran -eq 1 ]
-        then
-                ((++dict[H]))
-        else
-                ((++dict[T]))
-        fi
+        ran=$((RANDOM%2))$((RANDOM%2))
+        ((++dict[`coin $ran`]))
 done
-echo "By flipping the coin $nmb times"
-echo "it faces Head ${dict[H]} times & Tail ${dict[T]} times"
-
-win_head=$( perl -e "{print (${dict[H]}/$nmb * 100)}")
-win_tail=$( perl -e "{print (${dict[T]}/$nmb * 100)}")
+for key in ${!dict[@]}
+do
+        val=$(perl -e "{print (${dict[$key]}/$nmb * 100)}")
+        echo "Percentage of Winning $key is $val"
+done
